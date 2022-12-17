@@ -15,7 +15,6 @@ addpath('tools');
 landmarks = read_world('../data/world.dat');
 % Read sensor readings, i.e. odometry and range-bearing sensor
 data = read_data('../data/sensor_data.dat');
-
 % Initialize belief
 % x: 3x1 vector representing the robot pose [x; y; theta]
 x = zeros(3, 1);
