@@ -9,7 +9,7 @@ r = v2t(p);
 
 function [v] = t2v(r)
   v = [r(1,3) r(2,3) acos(r(1,1))]
-
+  
 end
 
 t2v(r);
