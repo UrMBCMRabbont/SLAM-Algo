@@ -5,7 +5,7 @@ function [t] = v2t(p)
   
 end
 
-r = v2t(p);
+  r = v2t(p);
 
 function [v] = t2v(r)
   v = [r(1,3) r(2,3) acos(r(1,1))]
