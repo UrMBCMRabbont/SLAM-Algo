@@ -31,7 +31,7 @@ for i = 1:m
 	% If the landmark is obeserved for the first time:
 	if(observedLandmarks(landmarkId)==false)
 		% TODO: Initialize its pose in mu based on the measurement and the current robot pose:
-		
+		mu(2*landmarkId+2 : 2*landmarkId+3) = mu(1: 2,1) + [ z(i).range*cos(z(i).bearing+mu(3)) z(i).range*sin(z(i).bearing+mu(3)) ]';
 		% Indicate in the observedLandmarks vector that this landmark has been observed
 		observedLandmarks(landmarkId) = true;
 	endif
