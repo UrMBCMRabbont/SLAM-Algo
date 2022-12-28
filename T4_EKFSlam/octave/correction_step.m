@@ -37,14 +37,14 @@ for i = 1:m
 	endif
 
 	% TODO: Add the landmark measurement to the Z vector
-	Z(2*i-1; 2*i,1) = [z(i).range; z(i).bearing];
+	Z(2*i-1: 2*i,1) = [z(i).range; z(i).bearing];
 	% TODO: Use the current estimate of the landmark pose
 	% to compute the corresponding expected measurement in expectedZ:
   delta = [ z(i).range*cos(z(i).bearing+mu(3)); z(i).range*sin(z(i).bearing+mu(3)) ];
   q = delta'*delta;
-  ExpectedZ(2*i-1; 2*i,1) = [ sqrt(q); atan2(delta(2), delta(1))-mu(3) ];
+  ExpectedZ(2*i-1: 2*i,1) = [ sqrt(q); normalize_angle(atan2(delta(2), delta(1))-mu(3)) ];
 	% TODO: Compute the Jacobian Hi of the measurement function h for this observation
-	
+  Hi = 1;
 	% Augment H with the new Hi
 	H = [H;Hi];	
 endfor
