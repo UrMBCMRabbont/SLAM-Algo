@@ -44,7 +44,7 @@ for i = 1:m
   q = delta'*delta;
   ExpectedZ(2*i-1: 2*i,1) = [ sqrt(q); normalize_angle(atan2(delta(2), delta(1))-mu(3)) ];
 	% TODO: Compute the Jacobian Hi of the measurement function h for this observation
-  Hi = 1;
+  Hi = 1/q*[ -sqrt(q)*delta(1) -sqrt(q)*delta(2) 0 sqrt(q)*delta(1) sqrt(q)*delta(2); delta(2) -delta(1) -q -delta(2) delta(1) ];
 	% Augment H with the new Hi
 	H = [H;Hi];	
 endfor
