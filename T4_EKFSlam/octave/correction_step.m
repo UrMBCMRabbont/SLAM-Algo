@@ -13,6 +13,7 @@ function [mu, sigma, observedLandmarks] = correction_step(mu, sigma, z, observed
 
 % Number of measurements in this time step
 m = size(z, 2);
+dim = size(mu, 1);
 
 % Z: vectorized form of all measurements made in this time step: [range_1; bearing_1; range_2; bearing_2; ...; range_m; bearing_m]
 % ExpectedZ: vectorized form of all expected measurements in the same form.
@@ -44,20 +45,28 @@ for i = 1:m
   q = delta'*delta;
   ExpectedZ(2*i-1: 2*i,1) = [ sqrt(q); normalize_angle(atan2(delta(2), delta(1))-mu(3)) ];
 	% TODO: Compute the Jacobian Hi of the measurement function h for this observation
+  Fxj = zeros(5, dim);
+  Fxj(1:3, 1:3) = eye(3);
+  Fxj(4, 2*landmarkId+2) = 1;
+  Fxj(5, 2*landmarkId+3) = 1;
   Hi = 1/q*[ -sqrt(q)*delta(1) -sqrt(q)*delta(2) 0 sqrt(q)*delta(1) sqrt(q)*delta(2); delta(2) -delta(1) -q -delta(2) delta(1) ];
+  % map Hi low dimension to H high dimension
+  Hi = Hi*Fxj;
 	% Augment H with the new Hi
-	H = [H;Hi];	
+	H = [H;Hi];
 endfor
 
 % TODO: Construct the sensor noise matrix Q
-
+Q = 0.01 * eye(2*m);
 % TODO: Compute the Kalman gain
-
+Kalman = (sigma*H')*inv(H*sigma*H' + Q);
 % TODO: Compute the difference between the expected and recorded measurements.
 % Remember to normalize the bearings after subtracting!
 % (hint: use the normalize_all_bearings function available in tools)
-
+dfZ = normalize_all_bearings(Z-ExpectedZ);
 % TODO: Finish the correction step by computing the new mu and sigma.
 % Normalize theta in the robot pose.
+mu = mu + Kalman*(dfZ);
+sigma = ( eye(size(Kalman*H))-(Kalman*H) )*sigma;
 
 end
